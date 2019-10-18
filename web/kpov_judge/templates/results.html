@@ -1,0 +1,15 @@
+<html>
+<body>
+<h1>
+{{task_id}}
+</h1>
+<p>
+<h2>Rezultati</h2>
+<ul>
+{% for k, v in results.items() %}
+<li>{{k}}: {{v}}</li>
+{% endfor %}
+</ul>
+</p>
+</body>
+</html>

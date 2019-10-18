@@ -1,0 +1,144 @@
+# English translations for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-02-20 19:31+0100\n"
+"PO-Revision-Date: 2018-10-13 20:57+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: templates/course_tasks.html:7 templates/index.html:7
+#, python-format
+msgid "Zdravo, %(student)s."
+msgstr "Hi, %(student)s."
+
+#: templates/course_tasks.html:10
+msgid "Naloge"
+msgstr "Tasks"
+
+#: templates/index.html:10
+msgid "Predmeti"
+msgstr "Classes"
+
+#: templates/task_greeting.html:54
+msgid "Shema omrežja za nalogo."
+msgstr "Network graph for this task."
+
+#: templates/task_greeting.html:55
+msgid "Naloga"
+msgstr "Task"
+
+#: templates/task_greeting.html:60
+msgid "Podrobna navodila."
+msgstr "Detailed instructions."
+
+#: templates/task_greeting.html:66
+msgid "Računalniki"
+msgstr "Computers"
+
+#: templates/task_greeting.html:82
+msgid ""
+"Za GNS3 uporabite slike v formatu qcow2, za katere rabite še zaledne "
+"datoteke (angl. <em lang=\"en\">backing files</em>). Za VirtualBox "
+"uporabite slike VMDK, ki ne podpirajo zalednih datotek in so zato precej "
+"večje. Namesto prenosa lahko slike VMDK <a href=\"/faq/#convert-disk-"
+"image\">pretvorite iz formata qcow2</a>."
+msgstr ""
+"For GNS3 use qcow2 images, which require the backing files below. "
+"For VirtualBox use VMDK images, which do not support backing files and "
+"are thus much larger. Alternatively you can "
+"<a href=\"/faq/#convert-disk-image\">convert qcow2 images</a> yourself."
+
+#: templates/task_greeting.html:86
+msgid "Zaledne datoteke"
+msgstr "Backing files"
+
+#: templates/task_greeting.html:88
+msgid ""
+"Vsako od spodnjih slik prenesete samo pri prvi nalogi, v kateri se "
+"pojavi. Vse datoteke morajo biti v istem imeniku."
+msgstr ""
+"Download each of the images below only if you do not have it yet. "
+"All files must be placed in the same directory."
+
+#: templates/task_greeting.html:106
+msgid "Slike navideznih diskov so v izdelavi. Stran osvežite čez nekaj minut."
+msgstr "Disk images are being generated. Please refresh the page after a few minutes."
+
+#: templates/task_greeting.html:111
+msgid "Status"
+msgstr "Status"
+
+#: templates/task_greeting.html:114
+msgid "Naloga nima še nobenega poskusa."
+msgstr "This task has not been attempted yet."
+
+#: templates/task_greeting.html:116
+#, python-format
+msgid "Naloga je uspešno opravljena dne %(time)s."
+msgstr "This task was solved on %(time)s."
+
+#: templates/task_greeting.html:118
+#, python-format
+msgid "Naloga še ni opravljena, najvišji rezultat je %(score)s."
+msgstr "This task has not been solved yet, the highest score is %(score)s."
+
+#: templates/task_greeting.html:122
+msgid "Program za preverjanje."
+msgstr "Testing program."
+
+#: templates/task_greeting.html:124
+msgid "Parametri"
+msgstr "Parameters"
+
+#~ msgid "Trenutno so na voljo naloge:"
+#~ msgstr "Available tasks:"
+
+#~ msgid "Trenutno so na voljo predmeti:"
+#~ msgstr "Available courses"
+
+#~ msgid "Rezultati"
+#~ msgstr "Results"
+
+#~ msgid "Ogledate si lahko:"
+#~ msgstr "You can view:"
+
+#~ msgid "opisi parametrov"
+#~ msgstr "parameter descriptions"
+
+#~ msgid "preverjalni program"
+#~ msgstr "checking program"
+
+#~ msgid "Slike diskov za to nalogo:"
+#~ msgstr "Disk images for this task:"
+
+#~ msgid "Osnovne slike"
+#~ msgstr "Backing images"
+
+#~ msgid ""
+#~ msgstr ""
+
+#~ msgid "Rezultat"
+#~ msgstr "Result"
+
+#~ msgid ""
+#~ "Za GNS3 uporabite slike v formatu "
+#~ "qcow2, za katere rabite še zaledne "
+#~ "datoteke (angl. <em lang=\"en\">backing "
+#~ "files</em>). VirtualBox ne podpira zalednih"
+#~ " datotek, zato so slike VDI precej"
+#~ " večje. Namesto prenosa lahko slike "
+#~ "VDI <a href=\"/faq/#convert-qcow2-vdi\">dobite "
+#~ "iz formata qcow2</a>."
+#~ msgstr ""
+

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<meta charset="utf-8">
+<title>KPOV Judge</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+img.setup {
+    border: 1px solid black;
+    border-radius: 2px;
+    float: right;
+    max-width: 20em;
+    margin: 1em 0 0 1em;
+}
+section.instructions {
+    column-span: all;
+    border: 1px solid gray;
+    border-radius: 2px;
+    background-color: #eee;
+    color: black;
+    padding: 0 1em 1em;
+}
+div.two-columns {
+    columns: 2;
+    column-gap: 4em;
+}
+div.two-columns > section {
+    display: inline-block;
+}
+section.disks > section > h1 {
+    margin-bottom: 0;
+}
+section ul {
+    list-style-position: inside;
+    margin: 0;
+    margin-left: 1em;
+    padding-left: 0;
+}
+section > ul {
+    margin-top: 0.5em;
+}
+</style>
+
+<h1>
+<a href="{{ url_for('course_tasks', course_id=course_id) }}" class="back">↩</a> {{task_id}}
+ <span style="font-size: 50%; font-weight: normal;">[
+{% for lang in ('en', 'si') %}
+<a href="{{ url_for('task_greeting', course_id=course_id, task_id=task_id, lang=lang) }}">{{lang}}</a>
+{% endfor %}
+]</span>
+</h1>
+
+<section class="instructions">
+<a href="setup.png"><img src="setup.png" class="setup" alt="{{ _('Shema omrežja za nalogo.') }}"></a>
+<h2>{{ _('Naloga') }}</h2>
+
+{% include instructions %}
+
+<!--
+<p>
+<a href="howto/">{{ _('Podrobna navodila.') }}</a>-->
+<br style="clear: both;">
+</section>
+
+<div class="two-columns">
+<section class="disks">
+<h2>{{ _('Računalniki') }}</h2>
+{% if computers %}
+<dl>
+  {% for c in computers %}
+  <dt>{{c['name']}}
+  <dd><ul>
+    {% for name, disk in c['disk_urls'].items() %}
+    <li>{{name}} [ {% for fmt in disk['formats'] %}<a href="{{disk_base_url+disk[fmt][0]}}">{{fmt}}</a> {% endfor %}]
+    {% else %}
+    {% endfor %}
+  </ul></dd>
+{% endfor %}
+</dl>
+
+<p>
+
+{{ _('Za GNS3 uporabite slike v formatu qcow2, za katere rabite še zaledne datoteke (angl. <em lang=\"en\">backing files</em>). Za VirtualBox uporabite slike VMDK, ki ne podpirajo zalednih datotek in so zato precej večje. Namesto prenosa lahko slike VMDK <a href=\"/faq/#convert-disk-image\">pretvorite iz formata qcow2</a>.') }}
+
+{% if backing_files %}
+<section>
+<h3>{{ _('Zaledne datoteke') }}</h3>
+<p>
+{{ _('Vsako od spodnjih slik prenesete samo pri prvi nalogi, v kateri se pojavi. Vse datoteke morajo biti v istem imeniku.') }}
+
+<dl>
+{% for fmt, images in backing_files.items() %}
+  {% if images %}
+  <dt>{{fmt}}
+  <dd><ul>
+    {% for image in images %}
+    <li><a href="{{disk_base_url+image}}">{{image}}</a></li>
+    {% endfor %}
+  </ul></dd>
+  {% endif %}
+{% endfor %}
+</dl>
+</section>
+{% endif %}
+
+{% else %}
+  <p>{{ _('Slike navideznih diskov so v izdelavi in bodo kmalu na voljo.') }}
+{% endif %}
+</section>
+
+<section>
+<h2>{{ _('Status') }}</h2>
+<p>
+{% if result is none %}
+{{ _('Naloga nima še nobenega poskusa.') }}
+{% elif result['result'] == 10 %}
+{{ _('Naloga je uspešno opravljena dne %(time)s.', time=result['time']) }}
+{% else  %}
+{{ _('Naloga še ni opravljena, najvišji rezultat je %(score)s.', score=result['result']) }}
+{% endif %}
+
+<p>
+<a href="../task.html">{{ _('Program za preverjanje.') }}</a>
+
+<h3>{{ _('Parametri') }}</h2>
+<dl>
+{% for p in params if p['value'] %}
+  <dt><em>{{ p['name'] }}</em>{% if p['description'] %} … <small>{{ p['description'] }}</small>{% endif %}</dt>
+  <dd><code>{{ p['value'] }}</code></dd>
+{% endfor %}
+</dl>
+</section>
+</div>
+
+{#
+<p>
+{% if openstack %}
+Openstack projekt za to vajo je že ustvarjen ali v izdelavi (funkcionalnost še ne deluje).
+{% else %}
+<a href='?narediStack=true'>Ustvari</a> Openstack projekt za to vajo (funkcionalnost še ne deluje).
+{% endif %}
+#}

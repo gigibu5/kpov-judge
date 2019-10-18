@@ -1,0 +1,16 @@
+<html>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<h1>KPOV Judge</h1>
+
+<p>
+{{ _('Zdravo, %(student)s.', student=student_id) }}
+
+<section>
+<h1>{{ _('Predmeti') }}</h1>
+
+<ul>
+{% for c in courses %}
+  <li><a href="{{url_for('course_tasks', course_id=c.course_id)}}">{{c.name}}</a>
+{% endfor %}
+</ul>

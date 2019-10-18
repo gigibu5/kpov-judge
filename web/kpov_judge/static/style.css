@@ -1,0 +1,73 @@
+a.back {
+    text-decoration: none;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 66em;
+    padding: 1em 2em;
+}
+
+code {
+    background-color: #d6d6d6;
+    color: black;
+    font-size: 1.2em;
+    padding: 0.20em 0.25em 0;
+}
+
+dl {
+    margin-top: 0.5em;
+}
+dt {
+    margin-top: 0.5em;
+}
+dd {
+    margin-left: 1em;
+}
+
+h1, h2, h3 {
+    margin-bottom: 0.5em;
+}
+h2 {
+    font-size: 110%;
+}
+h3 {
+    font-size: 105%;
+}
+
+p {
+    hyphens: auto;
+    line-height: 125%;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    padding-top: 0;
+    text-align: justify;
+}
+
+pre {
+    margin-left: 1em;
+    overflow: auto;
+}
+
+.tooltip { /* hide and position tooltip */
+  top: 1em;
+  left: 1em;
+  background-color: black;
+  color: white;
+  border-radius: 5px;
+  opacity: 0;
+  position: absolute;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+}
+
+.hover {
+    position: relative;
+}
+
+.hover:hover .tooltip { /* display tooltip on hover */
+    opacity: 1;
+}
