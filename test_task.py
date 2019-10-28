@@ -28,16 +28,16 @@ DEFAULT_LANGUAGE = 'si'
 def print_header(title, spacing=1):
     print('\n'*spacing + '> {}'.format(title))
 
+def rlinput(prompt, prefill=''):
+    readline.set_startup_hook(lambda: readline.insert_text(prefill))
+    try:
+        return input(prompt)
+    finally:
+        readline.set_startup_hook()
+
 # get the parameters for a task either from the user or from a file
 def get_params(params, params_meta, language=None):
     # prefill input() prompt with given text
-    def rlinput(prompt, prefill=''):
-        readline.set_startup_hook(lambda: readline.insert_text(prefill))
-        try:
-            return input(prompt)
-        finally:
-            readline.set_startup_hook()
-
     if language is None:
         language = params.get('language', DEFAULT_LANGUAGE)
 
@@ -52,8 +52,7 @@ def get_params(params, params_meta, language=None):
                     s = getpass.getpass('{}: '.format(description))
                 else:
                     s = rlinput('{}: '.format(description), params.get(name, ''))
-                if s:
-                    params[name] = s
+                params[name] = s
             except EOFError:
                 print()
         else:
@@ -202,6 +201,9 @@ if __name__ == '__main__':
                         params['username'] = user_params['username']
             except Exception as ex:
                 print(ex)
+    else:
+        # use system username to generate parameters
+        params['username'] = getpass.getuser()
 
     if basic_args.generate_params:
 	#prejema lahko samo stringe in ne številk (potrebno je str(int)
@@ -233,9 +235,8 @@ if __name__ == '__main__':
         print('Running task... ', end='', flush=True)
         task_result = task(**public_params)
         print('checking task... ', end='', flush=True)
-        task_params['token'] = tokens[task_name] # hack to avoid changing task_check signature
+        task_params['token'] = tokens.get(task_name, '') # hack to avoid changing task_check signature
         score, hints = task_check(task_result, task_params)
-        del task_params['token']
         print('done!')
         print('Score: {}'.format(score))
 

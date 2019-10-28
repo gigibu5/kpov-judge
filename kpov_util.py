@@ -11,6 +11,7 @@ import re
 import socket
 import string
 import struct
+import subprocess
 
 def ssh_test(host, user, password, commands=()):
     import pexpect
@@ -52,10 +53,13 @@ def alnum_gen(r, length=1, digit=True, lower=True, upper=True):
         for i in range(length))
 
 def fortune(r, max_len):
+    # ask fortune where it stores its cookies
+    paths = subprocess.run(['fortune', '-f'], stderr=subprocess.PIPE, text=True).stderr.splitlines()
+    fortune_dir = paths[0].split()[-1]
+
+    # make a list of all fortunes
     all_fortunes = []
-    for fortune_file in itertools.chain(
-            glob.iglob('/usr/share/fortune/*.u8'),
-            glob.iglob('/usr/share/games/fortunes/*.u8')):
+    for fortune_file in glob.iglob(f'{fortune_dir}/*.u8'):
         f = open(fortune_file)
         l = f.read().split('\n%\n')[:-1]
         for i in l:

@@ -13,7 +13,7 @@ import paramiko
 import yaml
 
 import kpov_util
-from test_task import http_auth
+from test_task import http_auth, print_header, rlinput
 from util import write_default_config
 
 class SSHGuestFs:
@@ -35,6 +35,8 @@ class SSHGuestFs:
         self.conn.exec_command('chown {}.{} "{}"'.format(str(owner), str(group), path))
     def command(self, arguments):
         self.conn.exec_command(arguments)
+    def copy_in(self, src, dest):
+        self.cp_r(src, dest)
     def cp(self, src, dest):
         self.conn.exec_command('cp "{}" "{}"'.format(src, dest))
     def cp_a(self, src, dest):
@@ -151,10 +153,15 @@ if __name__ == '__main__':
     yaml_config_file = os.path.expanduser("~/.kpov_params.yaml")
     with open(yaml_config_file) as f:
         params = yaml.load(f)
+
     task_name = params['task_name']
+    task_params = params.get('task_params', {}).get(task_name)
+    if not task_params:
+        print('Task parameters not found, please run test_task.py [-g] first.')
+        sys.exit(1)
+
     try:
         task_url = params['task_url']
-        task_name = params['task_name']
         if task_url.startswith('http'):
             http_auth(task_url, params['username'], params['password'])
         req = urllib.request.Request("{task_url}/{task_name}/task.py".format(**params))
@@ -173,19 +180,17 @@ if __name__ == '__main__':
     task_sshguestfs_params = sshguestfs_params.get(task_name, dict())
     for computer_name, computer in computers.items():
         comp_params = task_sshguestfs_params.get(computer_name, dict())
+        print_header(f'SSH for {computer_name}')
         for k in ['hostname', 'username', 'password']:
-            try:
-                p = comp_params[k]
-            except:
-                p = input("{} {}:".format(computer_name, k))
-            comp_params[k] = p
+            comp_params[k] = rlinput(f'{k.title()}: ',
+                    prefill=comp_params.get(k, ''))
         comp_connection = None
         try:
             comp_connection = SSHGuestFs(**comp_params)
             task_sshguestfs_params[computer_name] = comp_params
         except Exception as e:
-            print(e)
-            task_sshguestfs_params.pop(computer_name, None)
+            print(f'Could not connect to {computer_name}: {e}')
+            sys.exit(2)
         for disk in computer['disks']:
             disk_name = disk['name']
             templates[disk_name] = comp_connection
@@ -194,4 +199,4 @@ if __name__ == '__main__':
     with open(yaml_config_file, 'w') as f:
         # print "dumping", params
         yaml.dump(params, f)
-    prepare_disks(templates, params['task_params'][task_name], params)
+    prepare_disks(templates, task_params, params)
