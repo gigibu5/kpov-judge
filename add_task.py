@@ -83,6 +83,9 @@ if __name__ == '__main__':
             }, {'$set': v}, upsert=True)
     auto_networks.remove(None)
     db.networks.remove({'task_id': task_id, 'course_id': course_id})
+    db.task_params.remove({'task_id': task_id, 'course_id': course_id})
+    db.student_computers.remove({'task_id': task_id, 'course_id': course_id})
+    db.prepare_disks.remove({'task_id': task_id, 'course_id': course_id})
     try:
         net_list = d['networks'].items()
     except:

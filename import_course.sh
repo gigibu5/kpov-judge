@@ -1,9 +1,17 @@
-#!/usr/bin/sh
+#!/bin/sh
 
-course_dir=$1
+if [ $# -lt 2 ]; then
+  echo "usage: ${0} course_name course_dir"
+  exit 1
+fi
 
-for i in $1/*; do 
-    n=$(echo $i | sed -e 's/.*fri_kpov\///')
-    o=$(readlink $i/preparation | sed -e 's/.*tasks\///')
-    ./add_task.py $i/preparation kpov_2019/$n-preparation-$o; 
+course_name=$1
+course_dir=$2
+
+
+
+for i in ${course_dir}/*; do 
+    n=$(basename $i)
+    o=$(readlink ${i}/preparation | sed -e 's/.*tasks\///')
+    ./add_task.py "${i}/preparation" "${course_name}/$n-preparation-$o"; 
 done

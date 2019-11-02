@@ -10,6 +10,7 @@ import os
 import re
 import subprocess
 import sys
+import json
 
 import guestfs
 import pymongo
@@ -55,17 +56,18 @@ def create_snapshot(course_id, task_id, student_id, computer_name, disk_name, fm
             # backing images to task directory where target image will be
             # generated
             os.chdir(settings.DISK_TEMPLATE_PATH) # qemu-img info is saner when called from image directory
-            output = subprocess.check_output(
-                ['qemu-img', 'info', '--backing-chain', template], universal_newlines=True)
-            for image in [template] + [m.group(1) for m in re.finditer(r'backing file: (.*)', output)]:
+            output = json.loads(subprocess.check_output(
+                ['qemu-img', 'info', '--output=json', '--backing-chain', template], universal_newlines=True))
+            backing_files = [i.get("backing-filename", None) for i in output]
+            for image in [template] + [i for i in backing_files if i is not None]:
                 backing += [image]
                 dest = os.path.join(task_path, image)
                 if not os.path.exists(dest):
                     os.symlink(os.path.join(settings.DISK_TEMPLATE_PATH, image), dest)
             # would be great if someone finds a way to avoid the stuff above
-
             # make overlay image
             os.chdir(task_path)
+            print(task_path, backing_files)
             subprocess.call(['qemu-img', 'create',
                 '-f', fmt,
                 '-b', template, snap])
@@ -106,7 +108,6 @@ def prepare_task_disks(course_id, task_id, student_id, fmt, computers):
 
             # add disk or update existing record with new format
             disks[computer['name']][disk['name']] = [snap] + backing
-
         g.launch()
         mounted = set()
         if try_automount:
@@ -143,15 +144,16 @@ def prepare_task_disks(course_id, task_id, student_id, fmt, computers):
         global_params['task_url'] = settings.TASK_URL + '/' + course_id + '/'
 
     task_params = db.task_params.find_one({'course_id': course_id, 'task_id': task_id, 'student_id': student_id})['params']
-    prepare_disks = get_prepare_disks(db, course_id, task_id)
-    prepare_disks(templates, task_params, global_params)
-
+    try:
+        prepare_disks = get_prepare_disks(db, course_id, task_id)
+        prepare_disks(templates, task_params, global_params)
+    except Exception as ex:
+        print("Error in prepare_disks:", ex)
     # pospravi za seboj.
     lock_fp.write("unmounting\n")
     for g in set(templates.values()):
         g.umount_all()
         g.close()
-
     return disks
 
 if __name__ == '__main__':
@@ -187,7 +189,7 @@ if __name__ == '__main__':
                             d['formats'] += [fmt]
                             d[fmt] = urls
                 except Exception as ex:
-                    print(ex)
+                    print("E:", ex)
                     continue
 
             lock_fp.write("saving URLs\n")
