@@ -54,7 +54,7 @@ def alnum_gen(r, length=1, digit=True, lower=True, upper=True):
 
 def fortune(r, max_len):
     # ask fortune where it stores its cookies
-    paths = subprocess.run(['fortune', '-f'], stderr=subprocess.PIPE, text=True).stderr.splitlines()
+    paths = subprocess.run(['fortune', '-f'], stderr=subprocess.PIPE, universal_newlines=True).stderr.splitlines()
     fortune_dir = paths[0].split()[-1]
 
     # make a list of all fortunes
