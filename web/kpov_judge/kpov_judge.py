@@ -15,14 +15,13 @@ import kpov_util
 import pymongo
 import flask
 from flask import Flask, g, session, redirect, url_for, abort, render_template, flash, app, request, Response
-from flask.ext.babel import Babel, gettext, ngettext, format_datetime, _
+from flask_babel import Babel, gettext, ngettext, format_datetime, _
 import jinja2
 
 app = Flask(__name__)
 app.config.from_object(settings)
 babel = Babel(app)
 
-@babel.localeselector
 def get_locale():
     # terrible hack, should store as user preference in the DB
     if '/en/' in request.path:
@@ -287,4 +286,5 @@ def results_json(course_id, task_id):
 
 
 if __name__ == '__main__':
+    babel.init_app(app, locale_selector=get_locale)
     app.run(host='0.0.0.0')
